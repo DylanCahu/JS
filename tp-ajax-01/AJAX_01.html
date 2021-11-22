@@ -1,0 +1,96 @@
+﻿<html>
+<head>
+<meta charset="utf-8">
+<title>AJAX-01</title>
+<script>
+///////////////////////////////////////////////////////////////////////
+{//===============================================  Gestion d'AJAX  ===
+//---------------------------------------------------------------------
+function createXhrObject()	{
+
+  //Bidouille permettant de récuperer les différent nom de les request XML, plus pour la sécu qu'autre choses.
+
+    if (window.XMLHttpRequest)
+        return new XMLHttpRequest();
+
+    if (window.ActiveXObject)
+    {
+        var names = [
+            "Msxml2.XMLHTTP.6.0",
+            "Msxml2.XMLHTTP.3.0",
+            "Msxml2.XMLHTTP",
+            "Microsoft.XMLHTTP"
+        ];
+        for(var i in names)
+        {
+            try{ return new ActiveXObject(names[i]); }
+            catch(e){}
+        }
+    }
+	//--- Cas d'erreur ! XMLHttpRequest et autres n'exisztent pas
+    window.alert("Votre navigateur ne prend pas en charge l'objet XMLHTTPRequest.");
+    return null; // non supporté
+}//--------------------------------------------------------------------
+var xhr = createXhrObject(); //initialise l'objet xhr avec la verif de la version
+//---------------------------------------------------------------------
+xhr.onreadystatechange  = function() 	{ 
+//
+//  Fonction de Rappel (Callback function)
+//  Quand il t a une réponses (éventuellement un erreur)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if(xhr.readyState  == 4)
+  {
+	if(xhr.status  == 200) //signifie que l'on receptionne quelque chose.
+	{
+		//document.ajax.dyn="Received:"  + xhr.responseText; 
+		//console.log("Received:"  + xhr.responseText);
+		recevoir();
+	}
+	else
+	{
+		//document.ajax.dyn="Error code " + xhr.status;
+		//console.log("Error code " + xhr.status);
+	}
+  }
+};//-------------------------------------------------------------------
+}
+{//==============================================  Initialisations  ===
+var  memoSujet = null ;
+
+function	onLoad	()	{
+//
+//  au chargement de la page HTML principale, innitialiser tout.
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  memoSujet = document.getElementsByName('memoSujet')[0];
+}//--------------------------------------------------------------------
+}
+{//=============================================  Mise à Jour Page  ===
+/// ...
+function	charger()	{
+//
+//  Envoyer la demande de mise à jour de la page
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  xhr.open("GET", "data_01.txt",  true); 
+  xhr.send(null); 
+}//--------------------------------------------------------------------
+function	recevoir()	{
+//
+//  Après reception correcte : mettre à jour la page avec les infos,
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+var  reponse	= xhr.responseText ;
+var  lines		= reponse.split("\n") ; //prend un string et sépare en morceau avec le séparateur de notre choix.
+  //memoSujet.value	= lines	;
+  memoSujet.value	= reponse ;
+}//--------------------------------------------------------------------
+}//====================================================================
+///////////////////////////////////////////////////////////////////////
+</script>
+</head>
+<body margin=0 leftmargin=0 rightmargin=0 topmargin=0 bottommargin=0
+	onLoad="onLoad();"
+>
+<textarea name='memoSujet' readonly cols=70 rows=10>...
+</textarea>
+<button onClick="charger()">charger</button>
+</body>
+</html>

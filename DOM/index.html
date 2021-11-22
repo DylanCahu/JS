@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript HTML DOM</h2>
+
+
+<script>
+  
+function suppr()
+{
+    
+}
+
+function tester_01(requete)
+{
+    var newList             = document.createElement("ul");
+    var newElement          = document.createElement("li");
+    var elementContent      = document.createTextNode("salut");
+    var newElement2         = document.createElement("li");
+    var elementContent2     = document.createTextNode("bonjour");
+
+    var newUnderList            = document.createElement("ul");
+    var newUnderElement         = document.createElement("li");
+    var elementUnderContent     = document.createTextNode("Re-Salut");
+    var newUnderElement2        = document.createElement("li");
+    var elementUnderContent2    = document.createTextNode("Re-Bonjour");
+
+    if(requete=="add"){
+    newElement.appendChild(elementContent);
+    newList.appendChild(newElement);
+
+    newUnderElement.appendChild(elementUnderContent);
+    newUnderList.appendChild(newUnderElement);
+
+    newUnderElement2.appendChild(elementUnderContent2);
+    newUnderList.appendChild(newUnderElement2);
+
+    newList.appendChild(newUnderList);
+
+
+    newElement2.appendChild(elementContent2);
+    newList.appendChild(newElement2);
+
+    document.body.appendChild(newList);
+    }
+
+    if(requete=="del"){
+        console.log(document.body.lastChild);
+        document.body.removeChild(document.body.lastChild);
+    }
+
+
+}
+
+/*
+const x = document.getElementById("main");
+const y = x.getElementsByTagName("p");
+
+document.getElementById("demo").innerHTML = 
+'The first paragraph (index 0) inside "main" is: ' + y[0].innerHTML;
+*/
+</script>
+<p>Testeur :</p>
+<button onclick="tester_01('add');">Tester</button>
+
+<button onclick="tester_01('del');">Supprimer</button>
+
+</body>
+</html>

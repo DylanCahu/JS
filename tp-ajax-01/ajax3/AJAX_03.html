@@ -1,0 +1,155 @@
+﻿<html>
+<head>
+<meta charset="utf-8">
+<title>CLASSE-VIRTUELLE</title>
+<script>
+///////////////////////////////////////////////////////////////////////
+{//===============================================  Gestion d'AJAX  ===
+//---------------------------------------------------------------------
+function createXhrObject()	{
+    if (window.XMLHttpRequest)
+        return new XMLHttpRequest();
+
+    if (window.ActiveXObject)
+    {
+        var names = [
+            "Msxml2.XMLHTTP.6.0",
+            "Msxml2.XMLHTTP.3.0",
+            "Msxml2.XMLHTTP",
+            "Microsoft.XMLHTTP"
+        ];
+        for(var i in names)
+        {
+            try{ return new ActiveXObject(names[i]); }
+            catch(e){}
+        }
+    }
+	//--- Cas d'erreur ! XMLHttpRequest et autres n'exisztent pas
+    window.alert("Votre navigateur ne prend pas en charge l'objet XMLHTTPRequest.");
+    return null; // non supporté
+}//--------------------------------------------------------------------
+var xhr = createXhrObject();
+//---------------------------------------------------------------------
+xhr.onreadystatechange  = function() 	{ 
+//
+//  Fonction de Rappel (Callback function)
+//  Quand il t a une réponses (éventuellement un erreur)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if(xhr.readyState  == 4)
+  {
+	if(xhr.status  == 200) 
+	{
+		//document.ajax.dyn="Received:"  + xhr.responseText; 
+		//console.log("Received:"  + xhr.responseText);
+		surReception();
+	}
+	else
+	{
+		//document.ajax.dyn="Error code " + xhr.status;
+		//console.log("Error code " + xhr.status);
+	}
+  }
+};//-------------------------------------------------------------------
+function	submitForm()	{
+   xhr.open("GET", "data.php",  true); 
+   xhr.send(null); 
+}//--------------------------------------------------------------------
+}
+{//==============================================  Initialisations  ===
+var  memoSujet = null ;
+
+function	onLoad	()	{
+//
+//  au chargement de la page HTML principale, innitialiser tout.
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+memoSujet = document.getElementsByName('memoSujet')[0];
+  img1 = document.getElementsByName('img1')[0];
+  img2 = document.getElementsByName('img2')[0];
+  img3 = document.getElementsByName('img3')[0];
+  startTimerSeconde();
+}//--------------------------------------------------------------------
+}
+{//=============================================  Gestion du Timer  ===
+// ...
+var  timerSeconde = null ;				// null : inactif, sinon actif
+var  timerSecondeDelay = 1 ;			// 3 secondes entre 2 updates
+var  timerSecondeCount = 0 ;			// Mop
+function	startTimerSeconde	()	{
+//
+//  Démarrer le timerSecond s'il ne l'est pas déjà
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if ( timerSeconde )	return;	// déjà démarré !
+  
+  timerSeconde = setInterval( onTimerSecond , timerSecondeDelay*1000 ) ;
+}//--------------------------------------------------------------------
+function	stopTimerSeconde	()	{
+//
+//  Arrêter le timerSecond s'il est démarré
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if ( ! timerSeconde )	return;	// déjà arrêté !
+  
+  clearTimeout ( timerSeconde ) ;
+}//--------------------------------------------------------------------
+function	onTimerSecond		()	{
+//
+//  Chaque seconde (si la mise à jour automatique est demandée)
+//  une requette silencieuse est envoyée au serveur pour mettre à jour
+//  les images du client élève.
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if ( ! timerSeconde )	return;		// pas de mise à jour demandée !
+  
+  //--- Ici, mise à jour demandée
+  //xhr.open("GET", "data.php",  true); 
+  //xhr.send(null);
+  charger();
+  timerSecondeCount++;
+}//--------------------------------------------------------------------
+}//====================================================================
+{//=============================================  Mise à Jour Page  ===
+/// ...
+function	charger()	{
+//
+//  Envoyer la demande de mise à jour de la page
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  xhr.open("GET", "data.php?"+timerSecondeCount,  true); 
+  xhr.send(null); 
+}//--------------------------------------------------------------------
+var color;
+function	surReception()	{
+//
+//  Après reception correcte : mettre à jour la page avec les infos,
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+var  reponse	= xhr.responseText ;
+//var  lines		= reponse.split("\n");
+  
+  console.log(timerSecondeCount);
+  
+  memoSujet.value	=reponse	;
+  var obj = JSON.parse(reponse) ;
+
+  //console.log(obj.A)
+
+  if      ( obj.A =="red")  img1.src = "red.png"
+  else if ( obj.A =="blue") img1.src = "blue.png"
+  else                      img1.src = "white.png"
+
+  if      ( obj.B =="red")  img2.src = "red.png"
+  else if ( obj.B =="blue") img2.src = "blue.png"
+  else                      img2.src = "white.png"
+
+  if      ( obj.C =="red")  img3.src = "red.png"
+  else if ( obj.C =="blue") img3.src = "blue.png"
+  else                      img3.src = "white.png"
+}//--------------------------------------------------------------------
+}//====================================================================
+///////////////////////////////////////////////////////////////////////
+</script>
+</head>
+<body margin=0 leftmargin=0 rightmargin=0 topmargin=0 bottommargin=0 onLoad="onLoad();">
+<textarea name='memoSujet' readonly cols=70 rows=10>...
+</textarea></br>
+<img name='img1'></img>
+<img name='img2'></img>
+<img name='img3'></img>
+</body>
+</html>
